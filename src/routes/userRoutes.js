@@ -10,11 +10,17 @@ export default class UserRouter extends BasicRouter {
     this.post("/register", ["PUBLIC"], userController.register);
     this.get("/mail", ["ADMIN"], userController.sendMail);
     this.get("/:id", ["ADMIN"], (req, res) => userController.getById(req, res));
-    this.get("*", (req, res) => {
-      res.send("Error no se encontro la ruta");
-    });
-    this.post("*", (req, res) => {
-      res.send("Error no se encontro la ruta");
-    });
+
+    // Catch-all routes for errors
+    this.handleInvalidRoutes();
+  }
+
+  handleInvalidRoutes() {
+    this.get("*", this.invalidRouteHandler);
+    this.post("*", this.invalidRouteHandler);
+  }
+
+  invalidRouteHandler(req, res) {
+    res.status(404).send("Error: Ruta no encontrada");
   }
 }

@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import passport from "passport";
-import router from "../routes/index.js";
-import { configPassport } from "../middlewares/jwtPassport.js";
 import { persistenceDaoInit } from "../persistence/factory.js";
+import { configPassport } from "../middlewares/jwtPassport.js";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import router from "../routes/index.js";
 
 export const AppInit = (app) => {
   dotenv.config();
