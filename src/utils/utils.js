@@ -17,7 +17,7 @@ export const isValidPassword = (user, pass) => {
 
 export const getJWTCookie = (req) => {
   let token = null;
-  if (req.signedCookies) {
+  if (req && req.signedCookies) {
     token = req.signedCookies["currentUser"];
   }
   return token;

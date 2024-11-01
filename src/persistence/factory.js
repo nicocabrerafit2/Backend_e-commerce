@@ -1,5 +1,5 @@
 import { UserAccessMemory } from "./memory/dao/userDao.js";
-import mongoConennect from "../persistence/mongoDB/dao/connection.js";
+import mongoConnect from "../persistence/mongoDB/dao/connection.js";
 import { userModelMongo } from "../persistence/mongoDB/models/userModel.js";
 import { productModelMongo } from "../persistence/mongoDB/models/productModel.js";
 import { ticketModelMongo } from "../persistence/mongoDB/models/ticketModel.js";
@@ -8,61 +8,46 @@ import TicketAccessMongo from "../persistence/mongoDB/dao/ticketDao.js";
 import CartAccessMongo from "../persistence/mongoDB/dao/cartDao.js";
 import ProductAccessMongo from "../persistence/mongoDB/dao/productDao.js";
 import UserAccessMongo from "../persistence/mongoDB/dao/userDao.js";
-let persistenceDaoInit;
-let userDAO;
-let userModel;
-let productDAO;
-let productModel;
-let cartModel;
-let ticketModel;
-let cartDAO;
-let ticketDAO;
-const persistence = process.argv[2];
 
-switch (persistence) {
-  case "--mongo":
-    persistenceDaoInit = function () {
-      return mongoConennect.getInstance();
-    };
-    userDAO = new UserAccessMongo();
-    productDAO = new ProductAccessMongo();
-    ticketDAO = new TicketAccessMongo();
-    cartDAO = new CartAccessMongo();
-    productModel = productModelMongo;
-    userModel = userModelMongo;
-    ticketModel = ticketModelMongo;
-    cartModel = cartModelMongo;
+const persistenceConfig = {
+  "--mongo": {
+    init: () => mongoConnect.getInstance(),
+    userDAO: new UserAccessMongo(),
+    productDAO: new ProductAccessMongo(),
+    ticketDAO: new TicketAccessMongo(),
+    cartDAO: new CartAccessMongo(),
+    models: {
+      userModel: userModelMongo,
+      productModel: productModelMongo,
+      ticketModel: ticketModelMongo,
+      cartModel: cartModelMongo,
+    },
+  },
+  "--memory": {
+    init: () => console.log("Utilizando persistencia memory"),
+    userDAO: new UserAccessMemory(),
+    // Define los otros DAOs y modelos para la persistencia en memoria aquí si los necesitas.
+    models: {
+      // userModel: userModelMemory,
+      // productModel: productModelMemory,
+      // ticketModel: ticketModelMemory,
+      // cartModel: cartModelMemory,
+    },
+  },
+};
 
-    //metodo singleton para conexion a mongo
-    break;
-  case "--memory":
-    persistenceDaoInit = function () {
-      return console.log("Utilizando persistencia memory");
-    };
-    userDAO = new UserAccessMemory();
-    // productModel = productModelMemory;
-    // userModel = userModelMemory;
-    // ticketModel = ticketModelMemory;
-    // cartModel = cartModelMemory;
-    // productDAO = new ProductAccessMemory();
-    // ticketDAO = new TicketAccessMemory();
-    // cartDAO = new CartAccessMemory();
+const persistence = process.argv[2] || "--mongo";
+const config = persistenceConfig[persistence];
 
-    break;
-  default:
-    persistenceDaoInit = function () {
-      return mongoConennect.getInstance();
-    };
-    userDAO = new UserAccessMongo();
-    productDAO = new ProductAccessMongo();
-    ticketDAO = new TicketAccessMongo();
-    cartDAO = new CartAccessMongo();
-    productModel = productModelMongo;
-    userModel = userModelMongo;
-    ticketModel = ticketModelMongo;
-    cartModel = cartModelMongo;
-    break;
-}
+const {
+  init: persistenceDaoInit,
+  userDAO,
+  productDAO,
+  ticketDAO,
+  cartDAO,
+  models,
+} = config;
+const { userModel, productModel, ticketModel, cartModel } = models;
 
 export {
   persistenceDaoInit,
@@ -70,8 +55,8 @@ export {
   productDAO,
   ticketDAO,
   cartDAO,
-  productModel,
   userModel,
+  productModel,
   ticketModel,
   cartModel,
 };

@@ -28,26 +28,25 @@ class UserController extends basicController {
   login = async (req, res, next) => {
     try {
       const token = await this.service.login(req.body);
-      if (token === null) {
-        createResponse(res, 404, {
+      if (!token) {
+        return createResponse(res, 404, {
           message: "Email o contraseña incorrectos",
         });
-      } else {
-        !token
-          ? createResponse(res, 404, token)
-          : res
-              .status(200)
-              .cookie("currentUser", token, {
-                maxAge: 600000,
-                signed: true,
-                httpOnly: true,
-              })
-              .json({ message: "login OK", token });
       }
+
+      res
+        .status(200)
+        .cookie("currentUser", token, {
+          maxAge: 600000,
+          signed: true,
+          httpOnly: true,
+        })
+        .json({ message: "login OK", token });
     } catch (error) {
       next(error);
     }
   };
+
   sendMail = async (req, res, next) => {
     try {
       const mailSend = await this.service.sendMail(req.body);

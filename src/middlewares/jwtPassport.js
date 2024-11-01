@@ -1,11 +1,10 @@
 import passport from "passport";
-import jwt, { ExtractJwt } from "passport-jwt";
+import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { getJWTCookie } from "../utils/utils.js";
+import { userDTOReq } from "../persistence/DTO/userDTO.js";
 import { userModel } from "../persistence/factory.js";
-import { userDTOReq, userDTORes } from "../persistence/DTO/userDTO.js";
-const JWTStrategy = jwt.Strategy;
 
-const initializePassport = () => {
+export const configPassport = () => {
   passport.use(
     "jwt",
     new JWTStrategy(
@@ -18,19 +17,16 @@ const initializePassport = () => {
           const userData = new userDTOReq(payload.data);
           const userFound = await userModel
             .findOne({ email: userData.email })
-            //.populate("cart")
             .lean();
           if (!userFound) {
             return done(null, false);
           }
 
           return done(null, userFound);
-        } catch (e) {
-          return done(e);
+        } catch (error) {
+          return done(error);
         }
       }
     )
   );
 };
-
-export default initializePassport;
