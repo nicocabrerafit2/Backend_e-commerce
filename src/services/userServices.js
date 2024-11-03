@@ -49,32 +49,21 @@ class UserService extends basicServices {
       throw new Error(error);
     }
   }
-  async sendMail(user) {
-    //Por el momento hardcodeado (no uso el user que viene por parametro)
+  async sendMail(to, subject, message, attachments) {
     try {
-      const mailSend = await transport.sendMail({
+      const mailOptions = {
         from: "NC developer <nicocabrera8@gmail.com>",
-        to: "nicocabrera8@outlook.com",
-        subject: "Prueba de envío de mail automático",
-        html: `
-            <div>
-                <p> Saludos desde nodemailer(librería para enviar mails)</p>
-                <a href="https://goole.com.ar" target="__blank"> 
-                    <img src="cid:img01" />
-                </a>
-            </div>
-        `,
-        attachments: [
-          {
-            filename: "Hay_tabla.png",
-            path: path.join(__dirname, "..", "/img/Hay_tabla.png"),
-            cid: "img01",
-          },
-        ],
-      });
+        to,
+        subject,
+        html: message,
+        attachments,
+      };
+
+      const mailSend = await transport.sendMail(mailOptions);
       return mailSend;
     } catch (error) {
-      throw new Error(error);
+      console.error("Error al enviar el mail:", error);
+      throw new Error("Error en el envío de correo");
     }
   }
 }

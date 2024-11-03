@@ -19,17 +19,43 @@ class UserController extends basicController {
         });
       }
 
-      createResponse(res, 200, data);
+      createResponse(res, 200, {
+        message: "Registro exitoso",
+        data,
+      });
 
+      // Envío del correo tras el registro exitoso
       try {
-        const mailSend = await this.service.sendMail(req.body);
+        const subject = "Registro Exitoso";
+        const message = `
+        <div>
+          <p>Se ha registrado con éxito</p>
+          <a href="https://google.com.ar" target="_blank">
+            <img src="cid:img01" alt="Imagen" />
+          </a>
+        </div>
+      `;
+        const attachments = [
+          {
+            filename: "Hay_tabla.png",
+            path: path.join(__dirname, "..", "img", "Hay_tabla.png"),
+            cid: "img01",
+          },
+        ];
+
+        const mailSend = await this.service.sendMail(
+          req.body.email,
+          subject,
+          message,
+          attachments
+        );
         if (!mailSend) {
           console.error("Error al enviar el mail");
         } else {
           console.log("Mail enviado con éxito");
         }
-      } catch (error) {
-        console.error("Error en el envío del mail:", error);
+      } catch (mailError) {
+        console.error("Error en el envío del mail:", mailError);
       }
     } catch (error) {
       next(error);
