@@ -13,12 +13,23 @@ class UserController extends basicController {
   register = async (req, res, next) => {
     try {
       const data = await this.service.register(req.body, this.cartService);
-      if (data === null) {
-        createResponse(res, 404, {
+      if (!data) {
+        return createResponse(res, 404, {
           message: "Este email ya se encuentra registrado",
         });
-      } else {
-        createResponse(res, !data ? 404 : 200, data);
+      }
+
+      createResponse(res, 200, data);
+
+      try {
+        const mailSend = await this.service.sendMail(req.body);
+        if (!mailSend) {
+          console.error("Error al enviar el mail");
+        } else {
+          console.log("Mail enviado con éxito");
+        }
+      } catch (error) {
+        console.error("Error en el envío del mail:", error);
       }
     } catch (error) {
       next(error);
