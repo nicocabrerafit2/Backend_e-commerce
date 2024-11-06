@@ -10,6 +10,9 @@ export default class UserRouter extends BasicRouter {
     this.post("/register", ["PUBLIC"], userController.register);
     this.get("/mail", ["ADMIN"], userController.sendMail);
     this.get("/:id", ["ADMIN"], (req, res) => userController.getById(req, res));
+    this.delete("/:id", ["ADMIN"], (req, res) =>
+      userController.delete(req, res)
+    );
 
     // Catch-all routes for errors
     this.handleInvalidRoutes();

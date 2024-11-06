@@ -2,6 +2,8 @@ import UserService from "../services/userServices.js";
 import CartService from "../services/cartServices.js";
 import { createResponse } from "../utils/utils.js";
 import basicController from "./basicController.js";
+import path from "path";
+import { __dirname } from "../utils/utils.js";
 const userService = new UserService();
 const cartService = new CartService();
 class UserController extends basicController {
