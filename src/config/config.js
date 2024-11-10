@@ -4,7 +4,7 @@ import { persistenceDaoInit } from "../persistence/factory.js";
 import { configPassport } from "../middlewares/jwtPassport.js";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import router from "../routes/index.js";
+import routerIndex from "../routes/index.js";
 
 export const AppInit = (app) => {
   dotenv.config();
@@ -14,5 +14,5 @@ export const AppInit = (app) => {
   app.use(cookieParser(process.env.SECRET));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use("/", router);
+  app.use("/", routerIndex);
 };
