@@ -1,0 +1,23 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 5
+      arrivalRate: 50
+      name: test endpoint users
+scenarios:
+  - name: "Create users and search all"
+    flow:
+      - get:
+          url: "/api/sessions/"
+          capture:
+            - json: "$.users"
+              as: "user"
+      - log: "Revisando todos los usuarios"
+      - think: 2
+      - get:
+          url: "/api/sessions/register"
+          capture:
+            - json: "$.newUsers"
+              as: "newUsers"
+      - log: "Creando nuevos usuarios"
+      - think: 2
