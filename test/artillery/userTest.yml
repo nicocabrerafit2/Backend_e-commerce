@@ -4,20 +4,25 @@ config:
     - duration: 5
       arrivalRate: 50
       name: test endpoint users
+  processor: "../faker/faker-script.cjs"
+  defaults:
+    log: true
 scenarios:
   - name: "Create users and search all"
     flow:
+      - function: "generateUserData"
+      - post:
+          url: "/api/sessions/register"
+          json: "{{ $function.result }}"
+          capture:
+            - json: "$.newUsers"
+              as: "newUsers"
+      - log: "Creando nuevos usuarios"
+      - think: 2
       - get:
           url: "/api/sessions/"
           capture:
             - json: "$.users"
               as: "user"
       - log: "Revisando todos los usuarios"
-      - think: 2
-      - get:
-          url: "/api/sessions/register"
-          capture:
-            - json: "$.newUsers"
-              as: "newUsers"
-      - log: "Creando nuevos usuarios"
       - think: 2
