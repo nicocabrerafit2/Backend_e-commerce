@@ -1,0 +1,19 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 10
+      arrivalRate: 5
+      name: "Simple Test Phase"
+  defaults:
+    log: true
+scenarios:
+  - name: "Basic GET request"
+    flow:
+      - log: "Starting a new request"
+      - get:
+          url: "/api/sessions/"
+          capture:
+            - json: "$.users"
+              as: "users"
+      - log: "Revisando todos los usuarios"
+      - log: "{{ users }}"

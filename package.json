@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "npx artillery run test/artillery/userTest.yml",
+    "test:simple": "npx artillery run test/artillery/testprueba.yml",
     "start": "nodemon ./src/app.js --mongo",
     "dev:memory": "nodemon ./src/app.js --memory"
   },
@@ -16,6 +17,7 @@
     "@faker-js/faker": "^9.2.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
@@ -27,7 +29,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4",
-    "artillery": "^1.7.8"
+    "artillery": "^1.7.8",
+    "nodemon": "^3.1.4"
   }
 }
